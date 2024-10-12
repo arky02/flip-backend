@@ -1,5 +1,6 @@
 require("dotenv").config();
 const OpenAIApi = require("openai");
+const { CHATGPT_PROMPT } = require("./chatgpt-prompt");
 
 const openai = new OpenAIApi({
   api_key: "process.env.OPENAI_API_KEY",
@@ -11,22 +12,25 @@ async function callChatGPT(message) {
 
   try {
     const response = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
+      model: "gpt-3.5-turbo", // 사용할 모델
       messages: [
         {
           role: "system",
-          content:
-            "다음 내용에서 HTML 태그를 제외한 내용을 한글 존대말로 100자 이내로 요약해주세요.",
+          content: CHATGPT_PROMPT,
         },
-        { role: "user", content: message },
+        {
+          role: "user",
+          content: message, // 사용자에게 받은 커스텀 프롬프트
+        },
       ],
+      max_tokens: 300, // 응답에서 사용할 최대 토큰 수
+      temperature: 0.7, // 모델의 창의성 조정
     });
 
-    // 모델의 응답에서 답변 가져오기
-    const answer = response.choices[0].message.content;
-    //console.log('ChatGPT 답변:', answer);
-
-    return answer;
+    // 응답 데이터 반환
+    const chatGPTRes = response.choices[0].message.content;
+    console.log("ChatGPT 답변:", chatGPTRes);
+    return chatGPTRes;
   } catch (error) {
     console.error("ChatGPT 요청 중 오류:", error);
     throw error;
