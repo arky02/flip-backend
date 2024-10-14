@@ -23,7 +23,7 @@ async function callChatGPT(message) {
           content: message, // 사용자에게 받은 커스텀 프롬프트
         },
       ],
-      max_tokens: 10000, // 응답에서 사용할 최대 토큰 수
+      max_tokens: 4096, // 응답에서 사용할 최대 토큰 수
       temperature: 0.7, // 모델의 창의성 조정
     });
 
